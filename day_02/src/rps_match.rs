@@ -1,9 +1,44 @@
+use std::{collections::HashMap};
+
+static ROCK: &str = "A";
+static PAPER: &str = "B";
+static SCIZZORS: &str = "C";
+
 fn input_to_rock_paper_scizors(input: &str) -> u32 {
     return match input {
         // "X"|"A" => 0,
         "Y" | "B" => 1,
         "Z" | "C" => 2,
         _ => 0,
+    };
+}
+
+fn hand_rules(hand: &str) -> HashMap<&str, &str> {
+    return HashMap::from(
+        match hand {
+            "A" => [
+                ("loses", PAPER),
+                ("wins", SCIZZORS),
+            ],
+            "B" => [
+                ("loses", SCIZZORS),
+                ("wins", ROCK),
+            ],
+            "C" => [
+                ("loses", ROCK),
+                ("wins", PAPER),
+            ],
+            x => panic!("Unexpected invalid token {:?}", x),
+        }
+    );
+}
+
+pub fn needed_to_win<'input, 'his_hand>(input: &'input str, his_hand: &'his_hand str) -> &'his_hand str {
+    return match input {
+        "X" => hand_rules(his_hand).get(&"wins").copied().unwrap(),
+        "Y" => his_hand,
+        "Z" => hand_rules(his_hand).get(&"loses").copied().unwrap(),
+        x => panic!("Unexpected invalid token {:?}", x),
     };
 }
 
