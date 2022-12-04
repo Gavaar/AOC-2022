@@ -1,4 +1,4 @@
-pub fn contained_by_partner(section_vec: Vec<Vec<&'static str>>) -> Vec<bool> {
+pub fn contained_by_partner(section_vec: &Vec<Vec<&'static str>>, overlaps: bool) -> Vec<bool> {
     let mut contained_by_partner: Vec<bool> = Vec::new();
 
     for section in section_vec {
@@ -12,8 +12,16 @@ pub fn contained_by_partner(section_vec: Vec<Vec<&'static str>>) -> Vec<bool> {
 
         let contained = (first_end >= second_end && first_start <= second_start)
             || (second_end >= first_end && second_start <= first_start);
-
-        contained_by_partner.push(contained);
+        let overlaps_value = !((first_start > second_start
+            && first_start > second_end
+            && first_end > second_start
+            && first_end > second_end)
+            || (first_start < second_start
+                && first_start < second_end
+                && first_end < second_start
+                && first_end < second_end));
+        if !overlaps_value { println!("[{}-{}] [{}-{}]", first_start, first_end, second_start, second_end) }
+        contained_by_partner.push(if overlaps { overlaps_value } else { contained });
     }
 
     return contained_by_partner;
