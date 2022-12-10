@@ -1,5 +1,6 @@
-mod files;
 mod cycles;
+mod files;
+mod painting;
 
 fn get_relevant_values(signals: &Vec<i32>, from: usize, to: usize, step: usize) -> Vec<i32> {
     let err_value = -999999999;
@@ -28,6 +29,12 @@ fn part_one(file: &'static str) {
     println!("The sum of signal strengths is {}", sum);
 }
 
+fn part_two(file: &'static str) {
+    let lifecycle = cycles::calc(file);
+    let painting = painting::sprite_image(&lifecycle);
+    print!("Art:\n\n{}\n", painting);
+}
+
 fn main() {
     let test_file = files::get(true);
     let day_file = files::get(false);
@@ -41,4 +48,8 @@ fn main() {
     println!("--------------");
 
     println!("### PART 2 ###");
+    println!("-- Test");
+    part_two(test_file);
+    println!("-- Day");
+    part_two(day_file);
 }
