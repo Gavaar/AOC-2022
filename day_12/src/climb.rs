@@ -1,12 +1,12 @@
 use super::walk;
 use std::collections::HashMap;
 
-pub fn climb(
-    paths: &mut Vec<Vec<(usize, usize)>>,
+pub fn climb<'a>(
+    paths: &'a mut Vec<Vec<(usize, usize)>>,
     start: (usize, usize),
     target: (usize, usize),
-    matrix: Vec<Vec<u32>>,
-) -> &mut Vec<Vec<(usize, usize)>> {
+    matrix: &Vec<Vec<u32>>,
+) -> &'a mut Vec<Vec<(usize, usize)>> {
     paths.push(Vec::from([start]));
     let mut visited: HashMap<String, bool> = HashMap::new();
     visited.insert(String::from("0_0"), true);
@@ -16,7 +16,7 @@ pub fn climb(
 
         for _ in 0..paths.len() {
             let curr_index = memory_index.clone();
-            let possible_opts = walk::walk(paths[curr_index].last().unwrap(), &matrix);
+            let possible_opts = walk::walk(paths[curr_index].last().unwrap(), matrix);
             let new_opts: Vec<&(usize, usize)> = possible_opts
                 .iter()
                 .filter(|opt| visited.get(&format!("{}_{}", opt.0, opt.1)) == None)
@@ -42,6 +42,10 @@ pub fn climb(
             }
 
             memory_index += 1;
+        }
+
+        if paths.len() == 0 {
+            break;
         }
 
         if visited.get(&format!("{}_{}", target.0, target.1)) != None {
